@@ -2,6 +2,6 @@
 
 ## Poster
 
-![CLIP] (poster.pdf)
+![Mixed-Transformer] (poster.pdf)
 
 
