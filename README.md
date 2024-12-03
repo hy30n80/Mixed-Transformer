@@ -2,6 +2,12 @@
 
 ## Poster
 
-![Mixed-Transformer] (poster.png)
+![poster](poster.png)
 
 
+
+## Usage 
+```bash
+$ conda
+$ 
+'''
