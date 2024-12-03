@@ -2,6 +2,6 @@
 
 ## Poster
 
-![CLIP] (poster.png)
+![CLIP] (poster.pdf)
 
 
