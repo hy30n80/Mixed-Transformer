@@ -177,7 +177,6 @@ class ResidualAttentionBlock(nn.Module):
         self.embed_dim = d_model # 1024
         self.n_head = n_head # 16
         self.attn = nn.MultiheadAttention(d_model, n_head) # -> (d_model * 2, n_head)
-        self.new_attn = 
         self.ln_1 = LayerNorm(d_model)
         self.mlp = nn.Sequential(OrderedDict([
             ("c_fc", nn.Linear(d_model, d_model * 4)),
@@ -244,7 +243,6 @@ class ResidualAttentionBlock(nn.Module):
 
     def calculate_attention(self, query, key, value, mask):         # query, key, value: (n_batch, h, seq_len, d_k)
         d_k = key.shape[-1]
-        query = 
         attention_score = torch.matmul(query, key.transpose(-2, -1))  # (n_batch, h, seq_len, seq_len)
         attention_score = attention_score / math.sqrt(d_k)
 
@@ -258,7 +256,6 @@ class ResidualAttentionBlock(nn.Module):
         out = torch.matmul(attention_prob, value)  # (n_batch, h, seq_len, d_k)
         return out
 
-    def 
 
 
     def forward(self, x: torch.Tensor, q_prime: torch.Tensor=None, k_prime: torch.Tensor=None, v_prime: torch.Tensor=None):
