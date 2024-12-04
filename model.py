@@ -54,6 +54,8 @@ class ImageEncoder(nn.Module):
         }
         self.encoder = 'vitl'
 
+
+
         if self.args.add_residual_linear_connection:
             self.v_transforms = nn.ModuleList([
                 nn.Linear(1024, 1024).to("cuda") for _ in range(len(self.visual.transformer.resblocks))
@@ -81,9 +83,16 @@ class ImageEncoder(nn.Module):
 
         with torch.no_grad():
             _, query, key, value = self.dinov2.get_intermediate_layers(image, self.intermediate_layer_idx[self.encoder], return_class_token=True)
-            query = torch.stack([q.detach() for q in query], dim=0).squeeze(1) # torch.Size([24 (layer_num), 16 (batch), 577, 1024]) # head 는? 
-            key = torch.stack([k.detach() for k in key], dim=0).squeeze(1)
-            value = torch.stack([v.detach() for v in value], dim=0).squeeze(1)
+            
+            if self.args.test_one_image:
+                query = torch.stack([q.detach() for q in query], dim=0) # torch.Size([24 (layer_num), 16 (batch), 577, 1024]) # head 는? 
+                key = torch.stack([k.detach() for k in key], dim=0)
+                value = torch.stack([v.detach() for v in value], dim=0)
+                print(query.shape)
+            else:
+                query = torch.stack([q.detach() for q in query], dim=0).squeeze(1) # torch.Size([24 (layer_num), 16 (batch), 577, 1024]) # head 는? 
+                key = torch.stack([k.detach() for k in key], dim=0).squeeze(1)
+                value = torch.stack([v.detach() for v in value], dim=0).squeeze(1)
 
 
         for i, block in enumerate(self.visual.transformer.resblocks):
@@ -115,11 +124,11 @@ class MixedCLIP(nn.Module):
 
         self.logit_scale = clip_model.logit_scale
         self.text_encoder = CLIPTextEncoder(clip_model)
-        self.image_encoder = ImageEncoder(args, clip_model, DinoV2)
+        self.args = args
+        self.image_encoder = ImageEncoder(self.args, clip_model, DinoV2)
 
         self.text_encoder = torch.nn.DataParallel(self.text_encoder)
         self.image_encoder = torch.nn.DataParallel(self.image_encoder)
-        self.args = args
 
 
     def encode_image(self, images):
@@ -145,15 +154,15 @@ class MixedCLIP(nn.Module):
 
 
 
-# def create_logits(x1,x2,logit_scale):
-#     x1 = x1.float()
-#     x2 = x2.float()
-#     x1 = x1 / x1.norm(dim=-1, keepdim=True)
-#     x2 = x2 / x2.norm(dim=-1, keepdim=True)
+def create_logits(x1,x2,logit_scale):
+    x1 = x1.float()
+    x2 = x2.float()
+    x1 = x1 / x1.norm(dim=-1, keepdim=True)
+    x2 = x2 / x2.norm(dim=-1, keepdim=True)
 
-#     # cosine similarity as logits
-#     logits_per_x1 =  logit_scale*x1 @ x2.t()
-#     logits_per_x2 =  logit_scale*x2 @ x1.t()
+    # cosine similarity as logits
+    logits_per_x1 =  logit_scale*x1 @ x2.t()
+    logits_per_x2 =  logit_scale*x2 @ x1.t()
 
-#     return logits_per_x1, logits_per_x2
+    return logits_per_x1, logits_per_x2
 
