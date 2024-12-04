@@ -227,8 +227,11 @@ class ResidualAttentionBlock(nn.Module):
             key = torch.cat((k, k_prime), dim=-1)
             
             #pdb.set_trace()
-            value = v + transform(v_prime)
+            if v is not None:
+                value = v + transform(v_prime)
 
+            else:
+                value = v
 
             out = self.calculate_attention(query, key, value, self.attn_mask)  # (n_batch, h, seq_len, d_k)
             out = out.permute(0, 2, 1, 3).contiguous()  # (n_batch, seq_len, h, d_k)
