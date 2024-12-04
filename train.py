@@ -347,6 +347,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--validate_per_relation', type=bool, default=True)
     parser.add_argument('--train_only_relation', type=str, default=None)
+    parser.add_argument('--add_residual_linear_connection', type=bool, default=False)
 
     args = parser.parse_args()
     
