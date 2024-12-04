@@ -227,7 +227,7 @@ class ResidualAttentionBlock(nn.Module):
             key = torch.cat((k, k_prime), dim=-1)
             
             #pdb.set_trace()
-            if v is not None:
+            if v_prime is not None:
                 value = v + transform(v_prime)
 
             else:
