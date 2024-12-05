@@ -45,7 +45,7 @@ $ python train.py --mini_batch_size 64 --batch_size 4096 --clip_base_model ViT-L
 Please Install finetuned weight from [Here](https://drive.google.com/file/d/1vWF0Jj6g8JEoyvRLlDD7_uAxTgMfGgMb/view?usp=drive_link). and put them under the `checkpoints` directory.
 
 ```bash
-$ python train.py --only evaluation True --checkpoint_path "your_path" --clip_base_model ViT-L/14@336px
+$ python train.py --only_evaluation True --checkpoint_path "your_path" --clip_base_model ViT-L/14@336px
 ```
 
 
