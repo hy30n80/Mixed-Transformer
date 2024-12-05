@@ -4,6 +4,12 @@
 
 ![poster](poster.png)
 
+
+## Approach 
+![Approach](Approach.png)
+
+
+
 ## Installation
 
 ### Environment Setting
@@ -54,3 +60,7 @@ Please Install [Depth Anything V2](https://github.com/DepthAnything/Depth-Anythi
 ```bash
 $ python train.py --only evaluation True --checkpoint_path
 ```
+
+
+## Visualization
+![visualization](visualization.png)
